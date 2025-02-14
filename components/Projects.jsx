@@ -1,44 +1,71 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
-import propertyImg from '../public/assets/projects/property.jpg';
-import cryptoImg from '../public/assets/projects/crypto.jpg'
-import netflixImg from '../public/assets/projects/netflix.jpg'
-import twitchImg from '../public/assets/projects/twitch.jpg'
-import DreamCart from '../public/assets/Dream-cart.png'
-import Candle from '../public/assets/Candle.png'
-import ProjectItem from './ProjectItem';
+import React from "react";
+import cryptoImg from "../public/assets/projects/crypto.jpg";
+import DreamCart from "../public/assets/Dream-cart.png";
+import Candle from "../public/assets/Candle.png";
+import Quality from "../public/assets/projects/Quality.png";
+import Quran from "../public/assets/projects/Quran.png";
+import prime from "../public/assets/projects/prime-lib.png";
+import shogly from "../public/assets/projects/shogly.png";
+import ProjectItem from "./ProjectItem";
 
 const Projects = () => {
   return (
-    <div id='projects' className='w-full '>
-      <div className='max-w-[1240px] mx-auto px-2duration-500 py-16'>
-        <p className='text-xl tracking-widest uppercase  text-[#5651e5]'>
+    <div id="projects" className="w-full ">
+      <div className="max-w-[1240px] mx-auto px-2duration-500 py-16">
+        <p className="text-xl tracking-widest uppercase  text-[#5651e5]">
           Projects
         </p>
-        <h2 className='py-4'>What I&apos;ve Built</h2>
-        <div className='grid md:grid-cols-2 gap-8 '>
+        <h2 className="py-4">What I&apos;ve Built</h2>
+        <div className="grid gap-8 md:grid-cols-2 ">
           <ProjectItem
-            title='Dream-Cart'
+            title="Dream-Cart"
             backgroundImg={DreamCart}
-            projectUrl='/property'
-            tech='Next.js'
+            projectUrl="/property"
+            tech="Next.js"
           />
 
           <ProjectItem
-            title='Candle'
+            title="Candle"
             backgroundImg={Candle}
-            projectUrl='/Candle'
-            tech='Next.js'
+            projectUrl="/Candle"
+            tech="Next.js"
           />
 
           <ProjectItem
-          title='crypto'
-          backgroundImg={cryptoImg}
-          projectUrl='/crypto'
-          tech='React'
-        />
+            title="crypto"
+            backgroundImg={cryptoImg}
+            projectUrl="/crypto"
+            tech="React"
+          />
 
+          <ProjectItem
+            title="Quality world"
+            backgroundImg={Quality}
+            projectUrl="/Quality"
+            tech="React"
+          />
+          {/* https://q-platform.vercel.app/# */}
+          <ProjectItem
+            title="prime-lib"
+            backgroundImg={prime}
+            projectUrl="/PrimeLib"
+            tech="Nuxt"
+          />
+          {/* https://prime-lib.vercel.app/ */}
+          <ProjectItem
+            title="quran-app"
+            backgroundImg={Quran}
+            projectUrl="/Quran"
+            tech="Nuxt"
+          />
+          {/* https://quran-app-pearl.vercel.app/ */}
+          <ProjectItem
+            title="shogly"
+            backgroundImg={shogly}
+            projectUrl="/Shogly"
+            tech="React"
+          />
+          {/* https://shogly-gnsb.vercel.app/ */}
         </div>
       </div>
     </div>
