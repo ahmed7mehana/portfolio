@@ -38,12 +38,18 @@ const Quality = () => {
             scalability.
           </p>
           <a
-            href="https://github.com/ahmed7mehana/q-platform"
+            href="https://wa.me/+201558533755"
             target="_blank"
             rel="noreferrer"
           >
-            <button className="px-8 py-2 mt-4 mr-8">Code</button>
+            <p className="text[8px] font-bold uppercase">
+              if u wanna buy it just get tech with me on whatsup
+            </p>
+            <button className="px-8 py-2 mt-4 mr-8 hover:bg-black hover:scale-1 ">
+              Buy ( 5$ )
+            </button>
           </a>
+
 
           <a
             href="https://q-platform.vercel.app/"

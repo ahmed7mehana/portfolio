@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import Shoglyimg from "../public/assets/projects/Shogly.png";
+import Shoglyimg from "../public/assets/shogly.png";
 
 import { RiRadioButtonFill } from "react-icons/ri";
 import Link from "next/link";
@@ -46,11 +46,16 @@ const Shogly = () => {
             modern web development practices.
           </p>
           <a
-            href="https://github.com/ahmed7mehana/Shogly"
+            href="https://wa.me/+201558533755"
             target="_blank"
             rel="noreferrer"
           >
-            <button className="px-8 py-2 mt-4 mr-8">Code</button>
+            <p className="text[8px] font-bold uppercase">
+              if u wanna buy it just get tech with me on whatsup
+            </p>
+            <button className="px-8 py-2 mt-4 mr-8 hover:bg-black hover:scale-1 ">
+              Buy ( 5$ )
+            </button>
           </a>
 
           <a
