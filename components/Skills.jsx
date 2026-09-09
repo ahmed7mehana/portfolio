@@ -1,40 +1,47 @@
-import Image from "next/image";
+"use client";
+
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { DSkills } from "../Data";
+import { loadPortfolioData } from "../lib/firebase";
+import PortfolioAvatar from "./PortfolioAvatar";
+
 const Skills = () => {
+  const { data, isLoading, isError } = useQuery({ queryKey: ["portfolio-content"], queryFn: loadPortfolioData });
+  const skills = Array.isArray(data?.skills) ? data.skills : DSkills;
+  const sliderItems = [...skills, ...skills];
+
   return (
-    <div id="skills" className="w-full p-2 lg:h-screen">
-      <div className="max-w-[1240px] mx-auto flex flex-col justify-center h-full">
+    <section id="skills" className="skills-section w-full overflow-hidden p-2 lg:min-h-screen">
+      <div className="mx-auto flex h-full max-w-[1240px] flex-col justify-center">
         <p className="text-xl tracking-widest uppercase text-[#5651e5]">
           Skills
         </p>
         <h2 className="py-4">What I Can Do</h2>
-        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-          {DSkills.map((item) => (
-            <div
-              key={item.id}
-              className="p-6 duration-300 ease-in shadow-xl rounded-xl hover:scale-105"
-            >
-              <div className="grid items-center justify-center grid-cols-2 gap-4">
-                {item.img ? (
-                  <div className="m-auto">
-                    <img
-                      src={item.img}
-                      width={64}
-                      height={64}
-                      alt={item.title}
-                    />
-                  </div>
-                ) : null}
-                <div className="flex flex-col items-center justify-center">
-                  <h3>{item.title}</h3>
-                </div>
+        {isLoading ? <p className="content-status">Loading skills...</p> : null}
+        {isError ? <p className="content-status error">Couldn&apos;t sync skills. Showing saved defaults.</p> : null}
+        <div className="skills-slider" aria-label="Skills slider">
+          <div className="skills-slider-track">
+            {sliderItems.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="skill-slide">
+                <PortfolioAvatar label={item.title} src={item.img} className="skill-avatar" />
+                <h3>{item.title}</h3>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div className="skills-slider skills-slider-reverse" aria-hidden="true">
+          <div className="skills-slider-track">
+            {[...sliderItems].reverse().map((item, index) => (
+              <div key={`reverse-${item.id}-${index}`} className="skill-slide">
+                <PortfolioAvatar label={item.title} src={item.img} className="skill-avatar" />
+                <h3>{item.title}</h3>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 export default Skills;

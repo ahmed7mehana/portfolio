@@ -46,16 +46,7 @@ export const DSkills = [
     img: "/assets/skills/github1.png",
   },
 
-  {
-    id: "10",
-    title: "Vue.js",
-    img: "/assets/skills/Vue.png",
-  },
-  {
-    id: "11",
-    title: "Nuxt",
-    img: "/assets/skills/Nuxt.png",
-  },
+
 ];
 export const DProjects = [
   {

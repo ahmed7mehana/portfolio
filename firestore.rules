@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Portfolio content is intentionally scoped to one document.
+    // Add Firebase Authentication before deploying this publicly.
+    match /portfolio/{document} {
+      allow read, write: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

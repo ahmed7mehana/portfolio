@@ -1,19 +1,33 @@
-import Link from 'next/link'
-import React from 'react'
+"use client";
 
-const ProjectItem = ({title, backgroundImg, tech, projectUrl}) => {
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import PortfolioAvatar from "./PortfolioAvatar";
+
+const ProjectItem = ({ title, backgroundImg, tech, projectUrl }) => {
+  const router = useRouter();
+  const [isOpening, setIsOpening] = useState(false);
+
+  const openDetails = () => {
+    if (isOpening) return;
+    setIsOpening(true);
+    window.setTimeout(() => router.push(projectUrl || "#"), 1000);
+  };
+
   return (
-    <div className='relative flex items-center justify-center h-[208px] w-[300px]  shadow-xl shadow-gray-400 rounded-xl group hover:bg-gradient-to-r from-[#5651e5] to-[#709dff] '>
-    <img className=' w-full h-[full] rounded-xl group-hover:opacity-10'  src={backgroundImg} alt='/' /> 
-    <div className='hidden group-hover:block absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
-        <h3 className='text-[18px] tracking-wider text-center text-white uppercase'>{title}</h3>
-        <p className='pt-2 pb-4 text-center text-white lowercase'>{tech}</p>
-        <Link href={projectUrl}>
-            <p className='py-1 text-[15px] font-bold text-center text-gray-700 bg-white rounded-lg cursor-pointer'>Details</p>
-        </Link>
+    <div className="group relative flex h-[208px] w-[300px] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#5651e5] to-[#709dff] shadow-xl shadow-gray-400">
+      <PortfolioAvatar label={title} src={backgroundImg} className="project-avatar" />
+      <div className="project-overlay absolute inset-0 flex w-full flex-col items-center justify-center px-5 text-center">
+        <h3 className="text-center text-[18px] uppercase tracking-wider text-white">{title}</h3>
+        <p className="pb-4 pt-2 text-center lowercase text-white">{Array.isArray(tech) ? tech.join(" / ") : tech}</p>
+        <button type="button" className="details-button inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-[13px] font-bold uppercase tracking-wider text-gray-700 disabled:cursor-wait disabled:opacity-80" onClick={openDetails} disabled={isOpening}>
+          {isOpening ? <span className="details-spinner" aria-hidden="true" /> : null}
+          {isOpening ? "Loading..." : "Details"}
+          {!isOpening ? <span aria-hidden="true">-&gt;</span> : null}
+        </button>
+      </div>
     </div>
- </div>
-  )
-}
+  );
+};
 
-export default ProjectItem
+export default ProjectItem;
