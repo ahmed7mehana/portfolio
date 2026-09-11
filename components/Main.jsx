@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { FaGithub, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import { defaultHeader } from "../lib/content";
 import { loadPortfolioData } from "../lib/firebase";
 
@@ -45,6 +45,9 @@ const Main = () => {
                 CV
               </div>
             </Link>
+            <a href="https://wa.me/201558533755" target="_blank" rel="noreferrer" aria-label="Contact Ahmed on WhatsApp">
+              <div className="p-6 duration-300 ease-in rounded-full shadow-lg cursor-pointer shadow-gray-400 hover:scale-110 text-[#25D366]"><FaWhatsapp /></div>
+            </a>
           </div>
         </div>
       </div>

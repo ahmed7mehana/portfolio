@@ -4,7 +4,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
-import { getProjectImageUrl } from "../lib/content";
+import { getProjectImageCandidates } from "../lib/content";
 
 function getInitials(label = "Item") {
   return label
@@ -16,14 +16,23 @@ function getInitials(label = "Item") {
 }
 
 export default function PortfolioAvatar({ label, src, className = "" }) {
-  const [failed, setFailed] = useState(false);
-  const imageUrl = getProjectImageUrl(src);
-  const showImage = Boolean(imageUrl) && !failed;
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const imageUrls = getProjectImageCandidates(src);
+  const imageUrl = imageUrls[candidateIndex];
+  const showImage = Boolean(imageUrl);
+
+  const handleImageError = () => {
+    if (candidateIndex < imageUrls.length - 1) {
+      setCandidateIndex((index) => index + 1);
+    } else {
+      setCandidateIndex(imageUrls.length);
+    }
+  };
 
   return (
     <div className={`portfolio-avatar ${className}`} aria-label={label}>
       {showImage ? (
-        <img src={imageUrl} alt="" onError={() => setFailed(true)} />
+        <img key={imageUrl} src={imageUrl} alt="" onError={handleImageError} />
       ) : (
         <span>{getInitials(label)}</span>
       )}

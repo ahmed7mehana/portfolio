@@ -5,11 +5,11 @@ import ProjectItem from "./ProjectItem";
 import { DProjects } from "../Data";
 import { useQuery } from "@tanstack/react-query";
 import { loadPortfolioData } from "../lib/firebase";
-import { getProjectImageUrl } from "../lib/content";
+import { getProjectImageUrl, normalizeProject } from "../lib/content";
 
 const Projects = () => {
   const { data, isLoading, isError } = useQuery({ queryKey: ["portfolio-content"], queryFn: loadPortfolioData });
-  const projects = Array.isArray(data?.projects) ? data.projects : DProjects;
+  const projects = (Array.isArray(data?.projects) ? data.projects : DProjects).map(normalizeProject);
   const firstRow = projects.filter((_, index) => index % 2 === 0);
   const secondRow = projects.filter((_, index) => index % 2 === 1);
 
@@ -24,7 +24,8 @@ const Projects = () => {
                 title={item.name}
                 backgroundImg={getProjectImageUrl(item.img || item.image)}
                 projectUrl={item.btn || `/projects/${item.id}`}
-                tech={item.tech || item.Details?.tech}
+                tech={item.tech}
+                badge={item.badge}
               />
             </div>
           ))}

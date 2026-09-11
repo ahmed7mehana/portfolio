@@ -5,11 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, BookOpen, Check, Edit3, FileText, FolderKanban, LayoutDashboard, Link2, LockKeyhole, LogOut, Menu, Plus, Save, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
 import { startTransition, useEffect, useMemo, useState } from "react";
 import { DProjects, DSkills } from "../../Data";
-import { defaultCv, defaultHeader, defaultSiteContent, getProjectImageUrl } from "../../lib/content";
+import { defaultCv, defaultHeader, defaultSiteContent, getProjectDetails, getProjectImageUrl, normalizeProject } from "../../lib/content";
 import { firebaseEnabled, loadPortfolioData, savePortfolioData } from "../../lib/firebase";
 import PortfolioAvatar from "../../components/PortfolioAvatar";
 
-const defaultProject = { id: "", name: "", category: "", img: "", btn: "", tech: "", explan: "", demo: "", buy: "", price: "5" };
+const defaultProject = { id: "", name: "", category: "", img: "", btn: "", tech: "", explan: "", demo: "", buy: "", price: "5", badge: "" };
 const newId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 function readLocal(key, fallback) {
@@ -79,7 +79,7 @@ export default function DashboardPage() {
     if (!portfolioQuery.data) return;
     startTransition(() => {
       setSkills(portfolioQuery.data.skills || DSkills);
-      setProjects(portfolioQuery.data.projects || DProjects);
+      setProjects((portfolioQuery.data.projects || DProjects).map(normalizeProject));
       setCv({ ...defaultCv, ...(portfolioQuery.data.cv || {}) });
       setSiteContent({ ...defaultSiteContent, ...(portfolioQuery.data.siteContent || {}) });
       setHeader({ ...defaultHeader, ...(portfolioQuery.data.header || {}) });
@@ -164,7 +164,7 @@ export default function DashboardPage() {
       id: projectId,
       name,
       category: projectForm.category.trim() || "Project",
-      img: getProjectImageUrl(projectForm.img),
+      img: projectForm.img.trim(),
       btn: editingProjectId ? projectForm.btn || `/projects/${projectId}` : `/projects/${projectId}`,
       Details: {
         tech: projectForm.tech.split(",").map((item) => item.trim()).filter(Boolean),
@@ -173,6 +173,8 @@ export default function DashboardPage() {
         buy: projectForm.buy.trim() || "#",
         price: projectForm.price.trim() || "5",
       },
+      price: projectForm.price.trim() || "5",
+      badge: projectForm.badge,
     };
     const nextProjects = editingProjectId
       ? projects.map((project) => project.id === editingProjectId ? nextProject : project)
@@ -185,19 +187,20 @@ export default function DashboardPage() {
 
 
   const editProject = (project) => {
-    const details = project.Details || {};
+    const details = getProjectDetails(project);
     setEditingProjectId(project.id);
     setProjectForm({
       id: project.id,
       name: project.name || "",
       category: project.category || "",
-      img: getProjectImageUrl(project.img || project.image),
+      img: project.img || project.image || "",
       btn: project.btn || "",
-      tech: (project.tech || details.tech || []).join(", "),
+      tech: (details.tech || []).join(", "),
       explan: details.explan || "",
       demo: details.Demo || "",
       buy: details.buy || "",
       price: details.price || "5",
+      badge: project.badge || "",
     });
     document.getElementById("projects")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -307,9 +310,10 @@ export default function DashboardPage() {
               <label className="dashboard-label">Description<textarea className="dashboard-field dashboard-textarea" value={projectForm.explan} onChange={(event) => setProjectForm({ ...projectForm, explan: event.target.value })} placeholder="What makes this project special?" rows={3} /></label>
               <div className="form-grid-two"><label className="dashboard-label">Demo URL<input className="dashboard-field" value={projectForm.demo} onChange={(event) => setProjectForm({ ...projectForm, demo: event.target.value })} placeholder="https://..." /></label><label className="dashboard-label">Project route<input className="dashboard-field" value={projectForm.btn} onChange={(event) => setProjectForm({ ...projectForm, btn: event.target.value })} placeholder="/project" /></label></div>
               <label className="dashboard-label">Price<input className="dashboard-field" type="number" min="0" step="0.01" value={projectForm.price} onChange={(event) => setProjectForm({ ...projectForm, price: event.target.value })} placeholder="5" /></label>
+              <label className="dashboard-label">Project badge<select className="dashboard-field" value={projectForm.badge} onChange={(event) => setProjectForm({ ...projectForm, badge: event.target.value })}><option value="">No badge</option><option value="Freelance client">Freelance client</option><option value="Personal project">Personal project</option></select></label>
               <div className="project-form-actions"><button className="dashboard-primary form-submit" type="submit" disabled={persisting}>{editingProjectId ? <Edit3 size={17} /> : <Plus size={17} />} {persisting ? "Saving..." : editingProjectId ? "Update project" : "Add project"}</button>{editingProjectId ? <button className="dashboard-secondary form-submit" type="button" onClick={cancelProjectEdit}>Cancel</button> : null}</div>
             </form>
-            <div className="editor-card collection-card"><div className="card-heading"><div><span className="card-icon blue-icon"><FolderKanban size={18} /></span><h3>Your projects</h3></div><span className="required-note">Manage</span></div><div className="collection-list">{projects.map((project) => <div className="collection-row" key={project.id}><div className="collection-thumb"><PortfolioAvatar label={project.name} src={project.img || project.image} /></div><div className="collection-info"><strong>{project.name}</strong><span>{project.category} · ${project.Details?.price || "5"}</span></div><button type="button" className="edit-button" disabled={persisting} onClick={() => editProject(project)} aria-label={`Edit ${project.name}`}><Edit3 size={15} /></button><button type="button" className="delete-button" disabled={persisting} onClick={() => removeProject(project.id)} aria-label={`Delete ${project.name}`}><Trash2 size={16} /></button></div>)}</div></div>
+              <div className="editor-card collection-card"><div className="card-heading"><div><span className="card-icon blue-icon"><FolderKanban size={18} /></span><h3>Your projects</h3></div><span className="required-note">Manage</span></div><div className="collection-list">{projects.map((project) => <div className="collection-row" key={project.id}><div className="collection-thumb"><PortfolioAvatar label={project.name} src={project.img || project.image} /></div><div className="collection-info"><strong>{project.name}</strong><span>{project.category} · ${getProjectDetails(project).price || "5"}{project.badge ? ` · ${project.badge}` : ""}</span></div><button type="button" className="edit-button" disabled={persisting} onClick={() => editProject(project)} aria-label={`Edit ${project.name}`}><Edit3 size={15} /></button><button type="button" className="delete-button" disabled={persisting} onClick={() => removeProject(project.id)} aria-label={`Delete ${project.name}`}><Trash2 size={16} /></button></div>)}</div></div>
           </div>
         </section>
 

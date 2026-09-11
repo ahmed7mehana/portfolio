@@ -5,11 +5,12 @@ import { useParams } from "next/navigation";
 import { DProjects } from "../../../Data";
 import ProjectDetail from "../../../components/ProjectDetail";
 import { loadPortfolioData } from "../../../lib/firebase";
+import { getProjectDetails, normalizeProject } from "../../../lib/content";
 
 export default function DynamicProjectPage() {
   const { id } = useParams();
   const { data, isLoading, isError } = useQuery({ queryKey: ["portfolio-content"], queryFn: loadPortfolioData });
-  const projects = Array.isArray(data?.projects) ? data.projects : DProjects;
+  const projects = (Array.isArray(data?.projects) ? data.projects : DProjects).map(normalizeProject);
   const project = projects.find((item) => String(item.id) === String(id));
 
   if (isLoading) {
@@ -24,8 +25,8 @@ export default function DynamicProjectPage() {
     return <main className="grid min-h-screen place-items-center pt-20 text-slate-500">Project not found.</main>;
   }
 
-  const details = project.Details || {};
-  const stack = project.tech || details.tech || [];
+  const details = getProjectDetails(project);
+  const stack = details.tech;
 
   return (
     <ProjectDetail
