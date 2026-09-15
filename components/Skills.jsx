@@ -34,7 +34,7 @@ const Skills = () => {
           <div className="skills-slider-track">
             {[...sliderItems].reverse().map((item, index) => (
               <div key={`reverse-${item.id}-${index}`} className="skill-slide">
-                {item.img ? <img className="skill-image" src={item.img} alt="" /> : <PortfolioAvatar label={item.title} className="skill-avatar" />}
+                {item.img ? <img className="skill-image" src={item.img} alt={item.title} /> : <PortfolioAvatar label={item.title} className="skill-avatar" />}
                 <h3>{item.title}</h3>
               </div>
             ))}
