@@ -12,7 +12,7 @@ const Skills = () => {
   const sliderItems = [...skills, ...skills];
 
   return (
-    <section id="skills" className="skills-section w-full overflow-hidden p-2 lg:min-h-screen">
+    <section id="skills" className="w-full p-2 overflow-hidden skills-section lg:min-h-screen">
       <div className="mx-auto flex h-full max-w-[1240px] flex-col justify-center">
         <p className="text-xl tracking-widest uppercase text-[#5651e5]">
           Skills
@@ -24,7 +24,7 @@ const Skills = () => {
           <div className="skills-slider-track">
             {sliderItems.map((item, index) => (
               <div key={`${item.id}-${index}`} className="skill-slide">
-                {item.img ? <img className="skill-image" src={item.img} alt="" /> : <PortfolioAvatar label={item.title} className="skill-avatar" />}
+                {item.img ? <img className="skill-image" src={item.img} alt={item.title} /> : <PortfolioAvatar label={item.title} className="skill-avatar" />}
                 <h3>{item.title}</h3>
               </div>
             ))}
