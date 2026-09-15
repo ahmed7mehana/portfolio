@@ -6,7 +6,7 @@ export const DSkills = [
   },
   {
     id: "2",
-    title: "Css",
+    title: "css",
     img: "/assets/skills/Css.png",
   },
   {
